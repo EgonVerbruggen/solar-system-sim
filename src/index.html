@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactief Zonnestelsel</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="ui-layer">
+<button id="toggleBtn">Stop Tijd</button>
+<button id="resetBtn" style="display:none;">Terug naar Overzicht</button>
+</div>
+<div id="info-panel">
+<h2 id="m-name">Naam</h2>
+<p id="m-desc">Geselecteerde planeet details:</p>
+<hr>
+<div class="stats">
+<p><strong>Afstand:</strong> <span id="m-dist"></span></p>
+<p><strong>Massa:</strong> <span id="m-mass"></span></p>
+<p><strong>Diameter:</strong> <span id="m-diam"></span></p>
+<p><strong>Dagduur:</strong> <span id="m-rot"></span></p>
+<p><strong>Jaarduur:</strong> <span id="m-orbit"></span></p>
+<p><strong>Manen:</strong> <span id="m-moons"></span></p>
+<p><strong>Temperatuur:</strong> <span id="m-temp"></span></p>
+<p><strong>Type:</strong> <span id="m-type"></span></p>
+</div>
+</div>
+<div id="viewport">
+<div id="universe">
+<div id="sun"></div>
+</div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
