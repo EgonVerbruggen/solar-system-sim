@@ -7,18 +7,22 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<canvas id="starfield"></canvas>
 <div id="ui-layer">
 <button id="toggleBtn">Stop Tijd</button>
 <button id="resetBtn" style="display:none;">Terug naar Overzicht</button>
+<button id="orbitBtn">Ringen Uit</button>
+<span id="speedLabel">1×</span>
+<input type="range" id="speedSlider" min="0.1" max="4" step="0.1" value="1" title="Simulatiesnelheid">
 </div>
 <div id="info-panel">
 <h2 id="m-name">Naam</h2>
 <p id="m-desc">Geselecteerde planeet details:</p>
 <hr>
 <div class="stats">
-<p><strong>Afstand:</strong> <span id="m-dist"></span></p>
-<p><strong>Massa:</strong> <span id="m-mass"></span></p>
-<p><strong>Diameter:</strong> <span id="m-diam"></span></p>
+<p><strong>Afstand (Milj. km):</strong> <span id="m-dist"></span></p>
+<p><strong>Massa vs Aarde:</strong> <span id="m-mass"></span></p>
+<p><strong>Diameter (km):</strong> <span id="m-diam"></span></p>
 <p><strong>Dagduur:</strong> <span id="m-rot"></span></p>
 <p><strong>Jaarduur:</strong> <span id="m-orbit"></span></p>
 <p><strong>Manen:</strong> <span id="m-moons"></span></p>
