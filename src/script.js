@@ -16,13 +16,49 @@ size: 50, speed: 80, axis: 3.1, rotSpeed: 1 },
 { name: "Neptunus", dist: "4.495,1", mass: "17,1", diam: "49.528", rot: "16u 06m", orbit: "164,8 j", moons: 16, temp: "-201°C", type: "Ijsreus", color:
 "#6081FF", size: 28, speed: 300, axis: 28.3, rotSpeed: 1.4 }
 ];
+const planetGradients = {
+"Mercurius": "radial-gradient(circle at 35% 35%, #d0d0d0, #a0a0a0, #5a5a5a)",
+"Venus":     "radial-gradient(circle at 40% 30%, #f5e07a, #e3bb76, #c08530)",
+"Aarde":     "radial-gradient(ellipse at 28% 40%, #1e6b30 0%, transparent 40%), radial-gradient(ellipse at 68% 55%, #256b2a 0%, transparent 35%), radial-gradient(circle, #2271b3, #1a5080)",
+"Mars":      "radial-gradient(circle at 62% 28%, #7a2010 0%, transparent 40%), radial-gradient(circle, #e27b58, #b84030)",
+"Jupiter":   "repeating-linear-gradient(0deg, #c8855a 0px, #b07045 10px, #e8c090 20px, #b88060 30px, #d8956a 40px, #c8855a 50px)",
+"Saturnus":  "repeating-linear-gradient(0deg, #d4bc7a 0px, #a88535 10px, #dcc872 21px, #b09548 31px, #d4bc7a 42px)",
+"Uranus":    "radial-gradient(circle at 40% 35%, #d0eef5, #bbe1e4, #78c0d0)",
+"Neptunus":  "radial-gradient(circle at 42% 32%, #8898ff, #6081ff, #2848c0)"
+};
 const universe = document.getElementById('universe');
 const viewport = document.getElementById('viewport');
 const sun = document.getElementById('sun');
 const pathAnimations = [];
 let isRunning = true;
+function initStarfield() {
+const canvas = document.getElementById('starfield');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+const ctx = canvas.getContext('2d');
+for (let i = 0; i < 320; i++) {
+ctx.beginPath();
+ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 1.2 + 0.2, 0, Math.PI * 2);
+ctx.fillStyle = `rgba(255,255,255,${(Math.random() * 0.7 + 0.3).toFixed(2)})`;
+ctx.fill();
+}
+}
 function init() {
 sun.onclick = () => focusPlanet("Zon", sun);
+const beltCanvas = document.createElement('canvas');
+const beltSize = 580;
+beltCanvas.width = beltSize; beltCanvas.height = beltSize;
+beltCanvas.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;';
+const bctx = beltCanvas.getContext('2d');
+for (let i = 0; i < 600; i++) {
+const angle = Math.random() * Math.PI * 2;
+const r = 238 + Math.random() * 34;
+bctx.beginPath();
+bctx.arc(beltSize/2 + Math.cos(angle) * r, beltSize/2 + Math.sin(angle) * r, Math.random() * 1.2 + 0.3, 0, Math.PI * 2);
+bctx.fillStyle = `rgba(190,170,140,${(Math.random() * 0.55 + 0.2).toFixed(2)})`;
+bctx.fill();
+}
+universe.appendChild(beltCanvas);
 planetsData.forEach((p, i) => {
 const orbitSize = 180 + (i * 95);
 const orbitDiv = document.createElement('div');
@@ -41,7 +77,7 @@ const body = document.createElement('div');
 body.className = 'planet-body rotating';
 body.style.width = p.size + 'px';
 body.style.height = p.size + 'px';
-body.style.backgroundColor = p.color;
+body.style.background = planetGradients[p.name] || p.color;
 body.style.animationDuration = p.rotSpeed + 's';
 body.onclick = (e) => { e.stopPropagation(); focusPlanet(p.name, body); };
 const axisLine = document.createElement('div');
@@ -99,4 +135,5 @@ isRunning = !isRunning;
 this.innerText = isRunning ? "Stop Tijd" : "Start Tijd";
 pathAnimations.forEach(ani => isRunning ? ani.play() : ani.pause());
 };
+initStarfield();
 init();
