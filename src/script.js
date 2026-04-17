@@ -76,12 +76,15 @@ axisContainer.style.transform = `rotate(${p.axis}deg)`;
 axisContainer.style.marginTop = `-${p.size / 2}px`;
 axisContainer.className = 'planet-body-container';
 const body = document.createElement('div');
-body.className = 'planet-body rotating';
+body.className = 'planet-body';
 body.style.width = p.size + 'px';
 body.style.height = p.size + 'px';
-body.style.background = planetGradients[p.name] || p.color;
-body.style.animationDuration = p.rotSpeed + 's';
 body.onclick = (e) => { e.stopPropagation(); focusPlanet(p.name, body); };
+const surfaceDiv = document.createElement('div');
+surfaceDiv.className = 'planet-surface';
+surfaceDiv.style.background = planetGradients[p.name] || p.color;
+surfaceDiv.style.animationDuration = p.rotSpeed + 's';
+body.appendChild(surfaceDiv);
 const axisLine = document.createElement('div');
 axisLine.className = 'axis-line';
 body.appendChild(axisLine);
@@ -91,6 +94,24 @@ ring.className = 'saturn-ring';
 axisContainer.appendChild(ring);
 }
 axisContainer.appendChild(body);
+if (p.name === "Aarde") {
+const mOrbitSize = 56, mBodySize = 6, mRadius = mOrbitSize / 2;
+const moonOrbit = document.createElement('div');
+moonOrbit.className = 'orbit';
+moonOrbit.style.cssText = `width:${mOrbitSize}px;height:${mOrbitSize}px;top:50%;left:50%;transform:translate(-50%,-50%);z-index:5;`;
+const moonArm = document.createElement('div');
+moonArm.style.cssText = `position:absolute;top:50%;left:50%;width:0;height:${mRadius}px;margin-top:-${mRadius}px;transform-origin:50% 100%;pointer-events:none;`;
+const moonBody = document.createElement('div');
+moonBody.style.cssText = `width:${mBodySize}px;height:${mBodySize}px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#e0e0e0,#909090);margin-left:-${mBodySize/2}px;margin-top:-${mBodySize/2}px;`;
+moonArm.appendChild(moonBody);
+moonOrbit.appendChild(moonArm);
+axisContainer.appendChild(moonOrbit);
+const moonAni = moonArm.animate([
+{ transform: 'rotate(0deg)' },
+{ transform: 'rotate(360deg)' }
+], { duration: 2500, iterations: Infinity });
+pathAnimations.push(moonAni);
+}
 path.appendChild(axisContainer);
 orbitDiv.appendChild(path);
 universe.appendChild(orbitDiv);
@@ -142,5 +163,35 @@ isRunning = !isRunning;
 this.innerText = isRunning ? "Stop Tijd" : "Start Tijd";
 pathAnimations.forEach(ani => isRunning ? ani.play() : ani.pause());
 };
+// Snelheidsschuifregelaar
+document.getElementById('speedSlider').addEventListener('input', function() {
+const rate = parseFloat(this.value);
+document.getElementById('speedLabel').innerText = rate.toFixed(1) + '×';
+pathAnimations.forEach(a => { a.playbackRate = rate; });
+});
+
+// Orbitringen aan/uitzetten
+document.getElementById('orbitBtn').addEventListener('click', function() {
+const hidden = universe.classList.toggle('hide-orbits');
+this.innerText = hidden ? 'Ringen Aan' : 'Ringen Uit';
+});
+
+// Muiswiel-zoom
+let wheelTimeout;
+viewport.addEventListener('wheel', (e) => {
+e.preventDefault();
+viewport.style.transition = 'none';
+clearTimeout(wheelTimeout);
+wheelTimeout = setTimeout(() => { viewport.style.transition = ''; }, 200);
+const factor = e.deltaY < 0 ? 1.12 : 0.89;
+const newScale = Math.min(Math.max(vpScale * factor, 0.25), 12);
+const W = window.innerWidth, H = window.innerHeight;
+const ratio = newScale / vpScale;
+vpTx = e.clientX - W / 2 - ratio * (e.clientX - vpTx - W / 2);
+vpTy = e.clientY - H / 2 - ratio * (e.clientY - vpTy - H / 2);
+vpScale = newScale;
+viewport.style.transform = `translate(${vpTx}px, ${vpTy}px) scale(${vpScale})`;
+}, { passive: false });
+
 initStarfield();
 init();
