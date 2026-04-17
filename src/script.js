@@ -31,6 +31,7 @@ const viewport = document.getElementById('viewport');
 const sun = document.getElementById('sun');
 const pathAnimations = [];
 let isRunning = true;
+let vpTx = 0, vpTy = 0, vpScale = 1;
 function initStarfield() {
 const canvas = document.getElementById('starfield');
 canvas.width = window.innerWidth;
@@ -72,6 +73,7 @@ const path = document.createElement('div');
 path.className = 'planet-path';
 const axisContainer = document.createElement('div');
 axisContainer.style.transform = `rotate(${p.axis}deg)`;
+axisContainer.style.marginTop = `-${p.size / 2}px`;
 axisContainer.className = 'planet-body-container';
 const body = document.createElement('div');
 body.className = 'planet-body rotating';
@@ -104,10 +106,14 @@ pathAnimations.forEach(a => a.pause());
 isRunning = false;
 document.getElementById('toggleBtn').innerText = "Start Tijd";
 const rect = element.getBoundingClientRect();
-const scale = 5;
-const offsetX = scale * (window.innerWidth/2 - (rect.left + rect.width/2));
-const offsetY = scale * (window.innerHeight/2 - (rect.top + rect.height/2));
-viewport.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+const s = 5;
+const cx = rect.left + rect.width / 2;
+const cy = rect.top + rect.height / 2;
+const W = window.innerWidth, H = window.innerHeight;
+const newTx = -s * (cx - vpTx - W / 2) / vpScale;
+const newTy = -s * (cy - vpTy - H / 2) / vpScale;
+vpTx = newTx; vpTy = newTy; vpScale = s;
+viewport.style.transform = `translate(${newTx}px, ${newTy}px) scale(${s})`;
 let data = planetsData.find(x => x.name === name) || { name: "De Zon", dist: "0", mass: "333.000x Aarde", diam: "1.392.700", rot: "~27 d", orbit: "N.v.t.",
 moons: 0, temp: "5.500°C", type: "Ster" };
 document.getElementById('m-name').innerText = data.name;
@@ -123,6 +129,7 @@ document.getElementById('info-panel').classList.add('active');
 document.getElementById('resetBtn').style.display = 'block';
 }
 document.getElementById('resetBtn').onclick = function() {
+vpTx = 0; vpTy = 0; vpScale = 1;
 viewport.style.transform = `translate(0,0) scale(1)`;
 document.getElementById('info-panel').classList.remove('active');
 this.style.display = 'none';
