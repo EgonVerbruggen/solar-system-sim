@@ -29,9 +29,11 @@ const orbitDiv = document.createElement('div');
 orbitDiv.className = 'orbit';
 orbitDiv.style.width = orbitSize + 'px';
 orbitDiv.style.height = orbitSize + 'px';
+orbitDiv.style.top = '50%';
+orbitDiv.style.left = '50%';
+orbitDiv.style.transform = 'translate(-50%, -50%)';
 const path = document.createElement('div');
 path.className = 'planet-path';
-path.style.height = orbitSize + 'px';
 const axisContainer = document.createElement('div');
 axisContainer.style.transform = `rotate(${p.axis}deg)`;
 axisContainer.className = 'planet-body-container';
@@ -55,8 +57,8 @@ path.appendChild(axisContainer);
 orbitDiv.appendChild(path);
 universe.appendChild(orbitDiv);
 const ani = path.animate([
-{ transform: 'translateX(-50%) translateY(-50%) rotate(0deg)' },
-{ transform: 'translateX(-50%) translateY(-50%) rotate(360deg)' }
+{ transform: 'rotate(0deg)' },
+{ transform: 'rotate(360deg)' }
 ], { duration: p.speed * 1000, iterations: Infinity });
 pathAnimations.push(ani);
 });
@@ -66,9 +68,10 @@ pathAnimations.forEach(a => a.pause());
 isRunning = false;
 document.getElementById('toggleBtn').innerText = "Start Tijd";
 const rect = element.getBoundingClientRect();
-const offsetX = (window.innerWidth/2) - (rect.left + rect.width/2);
-const offsetY = (window.innerHeight/2) - (rect.top + rect.height/2);
-viewport.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(5)`;
+const scale = 5;
+const offsetX = scale * (window.innerWidth/2 - (rect.left + rect.width/2));
+const offsetY = scale * (window.innerHeight/2 - (rect.top + rect.height/2));
+viewport.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
 let data = planetsData.find(x => x.name === name) || { name: "De Zon", dist: "0", mass: "333.000x Aarde", diam: "1.392.700", rot: "~27 d", orbit: "N.v.t.",
 moons: 0, temp: "5.500°C", type: "Ster" };
 document.getElementById('m-name').innerText = data.name;
