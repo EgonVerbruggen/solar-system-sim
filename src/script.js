@@ -263,7 +263,7 @@ axisContainer.appendChild(ring);
 }
 axisContainer.appendChild(body);
 if (p.name === "Aarde") {
-const mOrbitSize = 56, mBodySize = 6, mRadius = mOrbitSize / 2;
+const mOrbitSize = 40, mBodySize = 6, mRadius = mOrbitSize / 2;
 const moonOrbit = document.createElement('div');
 moonOrbit.className = 'orbit';
 moonOrbit.style.cssText = `width:${mOrbitSize}px;height:${mOrbitSize}px;top:50%;left:50%;transform:translate(-50%,-50%);z-index:5;`;
