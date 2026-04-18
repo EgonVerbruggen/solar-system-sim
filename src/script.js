@@ -163,8 +163,10 @@ return canvas;
 const universe = document.getElementById('universe');
 const viewport = document.getElementById('viewport');
 const sun = document.getElementById('sun');
+const tooltip = document.getElementById('planet-tooltip');
 const pathAnimations = [];
 let isRunning = true;
+let hoverPausedBy = null;
 let vpTx = 0, vpTy = 0, vpScale = 1;
 function initStarfield() {
 const canvas = document.getElementById('starfield');
@@ -180,6 +182,21 @@ ctx.fill();
 }
 function init() {
 sun.onclick = () => focusPlanet("Zon", sun);
+sun.addEventListener('mouseenter', () => {
+const r = sun.getBoundingClientRect();
+tooltip.textContent = 'De Zon';
+tooltip.style.left = (r.left + r.width / 2) + 'px';
+tooltip.style.top = (r.top - 24) + 'px';
+tooltip.style.opacity = '1';
+if (isRunning) { pathAnimations.forEach(a => a.pause()); hoverPausedBy = sun; }
+});
+sun.addEventListener('mouseleave', () => {
+tooltip.style.opacity = '0';
+if (hoverPausedBy === sun) {
+  if (isRunning) pathAnimations.forEach(a => a.play());
+  hoverPausedBy = null;
+}
+});
 const beltCanvas = document.createElement('canvas');
 const beltSize = 580;
 beltCanvas.width = beltSize; beltCanvas.height = beltSize;
@@ -214,6 +231,21 @@ body.className = 'planet-body';
 body.style.width = p.size + 'px';
 body.style.height = p.size + 'px';
 body.onclick = (e) => { e.stopPropagation(); focusPlanet(p.name, body); };
+body.addEventListener('mouseenter', () => {
+const r = body.getBoundingClientRect();
+tooltip.textContent = p.name;
+tooltip.style.left = (r.left + r.width / 2) + 'px';
+tooltip.style.top = (r.top - 24) + 'px';
+tooltip.style.opacity = '1';
+if (isRunning) { pathAnimations.forEach(a => a.pause()); hoverPausedBy = body; }
+});
+body.addEventListener('mouseleave', () => {
+tooltip.style.opacity = '0';
+if (hoverPausedBy === body) {
+  if (isRunning) pathAnimations.forEach(a => a.play());
+  hoverPausedBy = null;
+}
+});
 const surface = createPlanetSurface(p.name, p.size);
 body.appendChild(surface);
 const rotAni = surface.animate([

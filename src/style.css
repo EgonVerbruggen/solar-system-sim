@@ -106,3 +106,17 @@ border-radius: 50%; transform: rotateX(75deg);
 pointer-events: none; z-index: 1;
 }
 #universe.hide-orbits .orbit { border-color: transparent; }
+#planet-tooltip {
+position: fixed;
+transform: translateX(-50%);
+white-space: nowrap;
+font-size: 11px;
+color: #fff;
+background: rgba(0, 0, 0, 0.65);
+padding: 2px 8px;
+border-radius: 10px;
+pointer-events: none;
+opacity: 0;
+transition: opacity 0.2s ease;
+z-index: 2000;
+}
